@@ -9,7 +9,9 @@ import UIKit
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
-    var names = ["a", "b", "c", "d", "e"]
+    var isRemoving = false
+    var names = ["柴犬", "黃金獵犬", "哈士奇", "紅貴賓", "巴哥犬"]
+    var images = ["Shiba", "Golden_Retriever", "Husky", "Poodie", "Pug"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return names.count
     }
@@ -17,6 +19,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = names[indexPath.row]
+        cell.imageView?.layer.cornerRadius = 20
+        cell.imageView?.clipsToBounds = true
+        cell.imageView?.contentMode = .scaleAspectFit
+        cell.imageView?.image = UIImage(named: images[indexPath.row])
         return cell
     }
     
@@ -25,20 +31,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        let action = UIAlertAction(title: "Yes", style: .default, handler: nil)
 //        alert.addAction(action)
 //        present(alert, animated: true, completion: nil)
-        toDataView(name: "Yes")
+        toDataView(name: names[indexPath.row], image: images[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
+        if isRemoving {
+            return .delete
+        }
+        else {
+            return .insert
+        }
     }
     @IBAction func insertButtonClick(_ sender: Any) {
         tableView.isEditing = true
-        let alert = UIAlertController(title: "Row Selected", message: "You", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Yes", style: .default, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+        isRemoving = false
     }
     @IBAction func deleteButtonClick(_ sender: Any) {
+        tableView.isEditing = true
+        isRemoving = true
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,10 +56,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Do any additional setup after loading the view.
     }
     
-    func toDataView(name: String) {
-        if let vc = storyboard?.instantiateViewController(withIdentifier: "DataView") {
-            show(vc, sender: self)
-        }
+    func toDataView(name: String, image: String) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "DataView") as! DataViewController
+        vc.showText = name
+        vc.imageName = image
+        show(vc, sender: self)
     }
 
     /*

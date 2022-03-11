@@ -8,10 +8,16 @@
 import UIKit
 
 class DataViewController: UIViewController {
-
+    
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var textLabel: UILabel!
+    
+    var showText = "123"
+    var imageName = "test"
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        textLabel.text = "狗狗名稱： " + showText
+        imageView.image = UIImage(named: imageName)
         // Do any additional setup after loading the view.
     }
     
