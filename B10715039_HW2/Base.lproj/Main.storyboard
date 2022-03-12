@@ -89,6 +89,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="deleteButton" destination="HdW-uH-6eU" id="Fju-d9-S5m"/>
+                        <outlet property="insertButton" destination="Bsl-UI-cvn" id="6Jr-3e-Z2o"/>
                         <outlet property="tableView" destination="EJG-Fh-bFZ" id="wPL-he-gUK"/>
                     </connections>
                 </viewController>

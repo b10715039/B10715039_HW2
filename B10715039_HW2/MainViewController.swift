@@ -8,6 +8,8 @@
 import UIKit
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    @IBOutlet weak var insertButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var isRemoving = false
     var names = ["柴犬", "黃金獵犬", "哈士奇", "紅貴賓", "巴哥犬"]
@@ -42,13 +44,35 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             return .insert
         }
     }
+    @IBAction func backButtonClick(_ sender: Any) {
+        tableView.setEditing(false, animated: true)
+        
+        if isRemoving {
+            deleteButton.addTarget(self, action: #selector(MainViewController.deleteButtonClick(_:)), for: .touchUpInside)
+            deleteButton.setTitle("刪除", for: .normal)
+        } else {
+            insertButton.addTarget(self, action: #selector(MainViewController.insertButtonClick(_:)), for: .touchUpInside)
+            insertButton.setTitle("新增", for: .normal)
+        }
+    }
+    
     @IBAction func insertButtonClick(_ sender: Any) {
-        tableView.isEditing = true
+        if tableView.isEditing {
+            return
+        }
+        tableView.setEditing(true, animated: true)
         isRemoving = false
+        insertButton.setTitle("返回", for: .normal)
+        insertButton.addTarget(self, action: #selector(MainViewController.backButtonClick(_:)), for: .touchUpInside)
     }
     @IBAction func deleteButtonClick(_ sender: Any) {
-        tableView.isEditing = true
+        if tableView.isEditing {
+            return
+        }
+        tableView.setEditing(true, animated: true)
         isRemoving = true
+        deleteButton.setTitle("返回", for: .normal)
+        deleteButton.addTarget(self, action: #selector(MainViewController.backButtonClick(_:)), for: .touchUpInside)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
