@@ -44,6 +44,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             return .insert
         }
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            names.remove(at: indexPath.row)
+            images.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
+        else if editingStyle == .insert {
+            names.insert(names[indexPath.row], at: indexPath.row)
+            images.insert(images[indexPath.row], at: indexPath.row)
+            tableView.insertRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
+    }
     @IBAction func backButtonClick(_ sender: Any) {
         tableView.setEditing(false, animated: true)
         
@@ -54,14 +69,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             insertButton.addTarget(self, action: #selector(MainViewController.insertButtonClick(_:)), for: .touchUpInside)
             insertButton.setTitle("新增", for: .normal)
         }
+        insertButton.isEnabled = true
+        deleteButton.isEnabled = true
     }
     
     @IBAction func insertButtonClick(_ sender: Any) {
         if tableView.isEditing {
             return
         }
-        tableView.setEditing(true, animated: true)
+        deleteButton.isEnabled = false
         isRemoving = false
+        tableView.setEditing(true, animated: true)
         insertButton.setTitle("返回", for: .normal)
         insertButton.addTarget(self, action: #selector(MainViewController.backButtonClick(_:)), for: .touchUpInside)
     }
@@ -69,8 +87,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if tableView.isEditing {
             return
         }
-        tableView.setEditing(true, animated: true)
+        insertButton.isEnabled = false
         isRemoving = true
+        tableView.setEditing(true, animated: true)
+        
         deleteButton.setTitle("返回", for: .normal)
         deleteButton.addTarget(self, action: #selector(MainViewController.backButtonClick(_:)), for: .touchUpInside)
     }
